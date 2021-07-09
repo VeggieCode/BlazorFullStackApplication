@@ -8,7 +8,7 @@
 
 @if (forecasts == null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>@message</em></p>
 }
 else
 {
@@ -37,10 +37,18 @@ else
 
 @code {
     private WeatherForecast[] forecasts;
+    string message = "Loading...";
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+        try {
+            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+        } catch (Exception exception){
+            if(exception.GetType().ToString() == "WebAssembly.JSException")
+            {
+                message = "Ha ocurrido un error en la comunicación con el servidor. Verifique su conexión";
+            }
+        }
     }
 
 }
