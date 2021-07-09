@@ -1,6 +1,6 @@
 {
-  "name": "BlazorWebAssemblyCrud",
-  "short_name": "BlazorWebAssemblyCrud",
+  "name": "BlazorPublished",
+  "short_name": "BlazorPublished",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
