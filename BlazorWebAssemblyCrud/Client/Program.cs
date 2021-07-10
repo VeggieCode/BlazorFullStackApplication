@@ -1,3 +1,5 @@
+using BlazorWebAssemblyCrud.Client.Helpers;
+using BlazorWebAssemblyCrud.Client.Repositorios;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +21,14 @@ namespace BlazorWebAssemblyCrud.Client
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
+            ConfigureServices(builder.Services);
             await builder.Build().RunAsync();
+        }
+
+        private static void ConfigureServices (IServiceCollection services)
+        {
+            services.AddScoped<IRepositorio, Repositorio>();
+            services.AddSingleton<AppState>();
         }
     }
 }
