@@ -2,6 +2,7 @@
 @inject HttpClient http
 @inject NavigationManager uriHelper
 @inject IJSRuntime js
+@inject AppState appState;
 <h3>Edit</h3>
 <Form ButtonText="Update" dev="dev"
       OnValidSubmit="@EditDeveloper" />
@@ -14,8 +15,18 @@
     }
     async Task EditDeveloper()
     {
-        await http.PutAsJsonAsync("api/developer", dev);
-        await js.InvokeVoidAsync("alert", $"Updated Successfully!");
-        uriHelper.NavigateTo("developer");
+        try
+        {
+            await http.PutAsJsonAsync("api/developer", dev);
+            await js.InvokeVoidAsync("alert", $"Updated Successfully!");
+            uriHelper.NavigateTo("developer");
+        }
+        catch (HttpRequestException httpRequestException)
+        {
+            js.InvokeVoidAsync("console.log", "http request exception entró en PUT");
+            await js.SaveRegisterForUpdate("api/developer", dev);
+            await appState.NotifyUpdatePendingSyncs();
+            uriHelper.NavigateTo("developer");
+        }
     }
 }
