@@ -24,12 +24,12 @@
 </div>
 
 @code {
-    int pendingSyncs = 0;
-    bool isUpdating = false;
-    bool hadError = false;
+        int pendingSyncs = 0;
+        bool isUpdating = false;
+        bool hadError = false;
 
-    //Evento que se ejecuta cuando el usuario entra a la aplicación se intente hacer una sincronización, en caso de que sea prudente.
-    protected override async Task OnInitializedAsync()
+        //Evento que se ejecuta cuando el usuario entra a la aplicación se intente hacer una sincronización, en caso de que sea prudente.
+        protected override async Task OnInitializedAsync()
     {
         //Suscripción al evento
         appState.OnUpdatePendingSyncs += UpdatePendingSyncs;
@@ -65,14 +65,14 @@
 
         try
         {
-            //Realizar la acción de las solicitudes HTTP pendientes
+            //Realizar la acción de las solicitudes HTTP pendientes de tipo POST
             foreach (var entity in localDbRegisters.ObjectsToCreate)
             {
                 var response = await repository.Post(entity.Url, entity.Body);
                 response.HttpResponseMessage.EnsureSuccessStatusCode();
                 await js.DeleteRegister("crear", entity.Id);
-            }            
-            //Realizar la acción de las solicitudes HTTP pendientes
+            }
+            //Realizar la acción de las solicitudes HTTP pendientes de tipo DELETE
             foreach (var entity in localDbRegisters.ObjectsToDelete)
             {
                 var response = await repository.Delete(entity.Url);
@@ -80,6 +80,14 @@
                 await js.DeleteRegister("borrar", entity.Id);
 
             }
+            //Realizar la acción de las solicitudes HTTP pendientes de tipo PUT
+            foreach (var entity in localDbRegisters.ObjectsToUpdate)
+            {
+                var response = await repository.Put(entity.Url, entity.Body);
+                response.HttpResponseMessage.EnsureSuccessStatusCode();
+                await js.DeleteRegister("actualizar", entity.Id);
+            }
+
             hadError = false;
             pendingSyncs = 0;
         }
