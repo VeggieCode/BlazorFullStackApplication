@@ -39,7 +39,7 @@ async function onFetch(event) {
     }
 
     let cachedResponse = null;
-
+    
     // For all navigation requests, try to serve index.html from cache
     // If you need some URLs to be server-rendered, edit the following check to exclude those URLs
     const shouldServeIndexHtml = event.request.mode === 'navigate';
@@ -53,7 +53,7 @@ async function onFetch(event) {
     }
 
     var respuesta = await obtenerYActualizar(event);
-
+    
     return respuesta;
 }
 
