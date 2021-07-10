@@ -1,0 +1,92 @@
+﻿@inject IJSRuntime js;
+@inject IRepositorio repository;
+@inject AppState appState;
+<div style="color: white; margin-bottom: 1em; border-top: 1px solid white;">
+    <div style="margin-left: 5px; margin-top: 5px;">        
+        @if (isUpdating)
+        {
+            <div>Sincronizando...</div>
+        }
+        else if(hadError)
+        {
+            <div>No se ha podido sincronizar la información</div>
+            <button @onclick="SyncClick">Reintentar</button>
+        }
+        else
+        {
+            <div>Sincronizaciones pendientes: @pendingSyncs</div>
+            @if (pendingSyncs > 0)
+            {
+                <button @onclick="SyncClick">Sincronizar</button>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    int pendingSyncs = 0;
+    bool isUpdating = false;
+    bool hadError = false;
+
+    //Evento que se ejecuta cuando el usuario entra a la aplicación se intente hacer una sincronización, en caso de que sea prudente.
+    protected override async Task OnInitializedAsync()
+    {
+        //Suscripción al evento
+        appState.OnUpdatePendingSyncs += UpdatePendingSyncs;
+        await Sync();
+    }
+
+    private async Task SyncClick()
+    {
+        await Sync();
+
+    }
+
+    public async Task UpdatePendingSyncs()
+    {
+        pendingSyncs = await js.GetPendingRegistersCount();
+        StateHasChanged();
+    }
+
+    private async Task Sync()
+    {
+        //obtener todos los registros de la BDD indexDB
+        var localDbRegisters = await js.GetPendingRegister();
+
+        var pendings = localDbRegisters.PendingObjects();
+
+        if (pendings == 0)
+        {
+            return;
+        }
+
+        isUpdating = true;
+        StateHasChanged();
+
+        try
+        {
+            //Realizar la acción de las solicitudes HTTP pendientes
+            foreach (var entity in localDbRegisters.ObjectsToCreate)
+            {
+                var response = await repository.Post(entity.Url, entity.Body);
+                response.HttpResponseMessage.EnsureSuccessStatusCode();
+                await js.DeleteRegister("crear", entity.Id);
+            }            
+            //Realizar la acción de las solicitudes HTTP pendientes
+            foreach (var entity in localDbRegisters.ObjectsToDelete)
+            {
+                var response = await repository.Delete(entity.Url);
+                response.HttpResponseMessage.EnsureSuccessStatusCode();
+                await js.DeleteRegister("borrar", entity.Id);
+
+            }
+            hadError = false;
+            pendingSyncs = 0;
+        }
+        catch (Exception exception){
+            hadError = true;
+        }
+        isUpdating = false;
+        StateHasChanged();
+    }
+}
