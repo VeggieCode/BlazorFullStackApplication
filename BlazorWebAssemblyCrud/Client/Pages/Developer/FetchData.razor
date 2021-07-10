@@ -1,6 +1,7 @@
 ﻿@page "/developer"
 @inject HttpClient client
 @inject IJSRuntime js
+@inject AppState appState
 
 <h3>Developers</h3>
 <small>Add as many developers as you wish.</small>
@@ -58,11 +59,25 @@ else
 
     async Task Delete(int developerId)
     {
-        var dev = developers.First(x => x.Id == developerId);
-        if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete {dev.FirstName}'s ({dev.Id}) Record?"))
-        {
-            await client.DeleteAsync($"api/developer/{developerId}");
-            await OnInitializedAsync();
+
+        try
+        {            
+            var dev = developers.First(x => x.Id == developerId);
+            if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete {dev.FirstName}'s ({dev.Id}) Record?"))
+            {
+                await client.DeleteAsync($"api/developer/{developerId}");
+                await OnInitializedAsync();
+                
+            }
         }
+        catch (HttpRequestException httpRequestException)
+        {
+            js.InvokeVoidAsync("console.log", "http request exception entró en DELETE");
+            await js.SaveRegisterForDelete($"api/developer/{developerId}");
+            await appState.NotifyUpdatePendingSyncs();
+        }
+
+
+
     }
 }

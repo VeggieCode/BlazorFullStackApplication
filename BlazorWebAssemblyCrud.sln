@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebAssemblyCrud.Server", "BlazorWebAssemblyCrud\Server\BlazorWebAssemblyCrud.Server.csproj", "{F1910391-9446-448B-85BC-1787442999AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWebAssemblyCrud.Server", "BlazorWebAssemblyCrud\Server\BlazorWebAssemblyCrud.Server.csproj", "{F1910391-9446-448B-85BC-1787442999AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebAssemblyCrud.Client", "BlazorWebAssemblyCrud\Client\BlazorWebAssemblyCrud.Client.csproj", "{EEFDD102-9AA1-43CF-8222-EA3C46C7EBD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWebAssemblyCrud.Client", "BlazorWebAssemblyCrud\Client\BlazorWebAssemblyCrud.Client.csproj", "{EEFDD102-9AA1-43CF-8222-EA3C46C7EBD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebAssemblyCrud.Shared", "BlazorWebAssemblyCrud\Shared\BlazorWebAssemblyCrud.Shared.csproj", "{0CCE4F78-5527-4CAE-A1A8-6AA352FED0BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWebAssemblyCrud.Shared", "BlazorWebAssemblyCrud\Shared\BlazorWebAssemblyCrud.Shared.csproj", "{0CCE4F78-5527-4CAE-A1A8-6AA352FED0BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
