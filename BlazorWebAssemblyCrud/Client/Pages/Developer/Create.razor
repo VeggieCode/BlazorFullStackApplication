@@ -1,6 +1,8 @@
 ﻿@page "/developer/create"
 @inject HttpClient http
 @inject NavigationManager uriHelper
+@inject IJSRuntime js;
+@inject AppState appState;
 
 <h3>Create</h3>
 
@@ -11,7 +13,19 @@
     Developer dev = new Developer();
     async Task CreateDeveloper()
     {
-        await http.PostAsJsonAsync("api/developer", dev);
-        uriHelper.NavigateTo("developer");
+        try
+        {
+            await http.PostAsJsonAsync("api/developer", dev);
+            uriHelper.NavigateTo("developer");
+        }
+        catch (HttpRequestException httpRequestException)
+        {
+            js.InvokeVoidAsync("console.log", "http request exception entró");
+            await js.SaveRegisterForCreate("api/developer", dev);
+            //Método para actualizar el contador de solitudes pendientes
+            await appState.NotifyUpdatePendingSyncs();
+            uriHelper.NavigateTo("developer");
+        }
+
     }
 }
