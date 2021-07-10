@@ -3,13 +3,15 @@ var dbVersion = 1;
 
 db.version(dbVersion).stores({
     crear: 'id++',
-    borrar: 'id++'
+    borrar: 'id++',
+    actualizar: 'id++'
 });
 
 async function getPendingRegisters() {
     return await {
         ObjectsToCreate: await db.crear.toArray(), //traer todos los valores de la tabla crear
-        ObjectsToDelete: await db.borrar.toArray()
+        ObjectsToDelete: await db.borrar.toArray(),
+        ObjectsToUpdate: await db.actualizar.toArray()
     };
 }
 
@@ -22,7 +24,8 @@ async function deleteRegister(table, id) {
 async function getPendingRegistersCount() {
     const pendingCreates = await db.crear.count();
     const pendingDeletes = await db.borrar.count();
-    return pendingCreates + pendingDeletes;
+    const pendingUpdates = await db.actualizar.count();
+    return pendingCreates + pendingDeletes + pendingUpdates;
 }
 
 async function saveRegisterForCreate(url, body) {
@@ -31,4 +34,8 @@ async function saveRegisterForCreate(url, body) {
 
 async function saveRegisterForDelete(url) {
     await db.borrar.put({ url })
+}
+
+async function saveRegisterForUpdate(url, body) {
+    await db.actualizar.put({ url, body: JSON.parse(body) })
 }

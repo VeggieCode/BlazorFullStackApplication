@@ -18,11 +18,14 @@ namespace BlazorWebAssemblyCrud.Client.Helpers
         public List<RegisterDBLocal> ObjectsToCreate { get; set; } = new List<RegisterDBLocal>();
         public List<RegisterDBLocal> ObjectsToDelete { get; set; } = new List<RegisterDBLocal>();
 
+        public List<RegisterDBLocal> ObjectsToUpdate { get; set; } = new List<RegisterDBLocal>();
+
         public int PendingObjects()
         {
             var result = 0;
             result += ObjectsToCreate.Count;
             result += ObjectsToDelete.Count;
+            result += ObjectsToUpdate.Count;
             return result;
         }
     }

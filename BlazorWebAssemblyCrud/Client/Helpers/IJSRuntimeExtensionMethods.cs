@@ -30,6 +30,11 @@ namespace BlazorWebAssemblyCrud.Client.Helpers
             await js.InvokeVoidAsync("saveRegisterForCreate", url, body);
         }
 
+        public static async ValueTask SaveRegisterForUpdate<T>(this IJSRuntime js, string url, T entity)
+        {
+            var body = JsonSerializer.Serialize(entity);
+            await js.InvokeVoidAsync("saveRegisterForUpdate", url, body);
+        }
         public static async ValueTask SaveRegisterForDelete(this IJSRuntime js, string url)
         {
             await js.InvokeVoidAsync("saveRegisterForDelete", url);
